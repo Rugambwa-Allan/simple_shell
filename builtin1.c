@@ -1,4 +1,7 @@
 #include "shell.h"
+#include <stdio.h>
+#include <string.h>
+
 
 /**
  * _myhistory - Displays history list, one command by line, preceded
@@ -70,11 +73,11 @@ int print_alias(list_t *node)
 	if (node)
 	{
 		o = _strchr(node->str, '=');
-		for (b = node->str; b <= o; a++)
-		_putchar(*b);
-		_putchar('\'');
-		_puts(o + 1);
-		_puts("'\n");
+		for (b = node->str; b <= o; b++)
+		_eputchar(*b);
+		_eputchar('\'');
+		_eputs(o + 1);
+		_eputs("'\n");
 		return (0);
 	}
 	return (1);
@@ -102,7 +105,7 @@ int _myalias(info_t *info)
 		}
 		return (0);
 	}
-	for (y = 1; info->argv[y]; i++)
+	for (y = 1; info->argv[y]; y++)
 	{
 		o = _strchr(info->argv[y], '=');
 		if (o)
