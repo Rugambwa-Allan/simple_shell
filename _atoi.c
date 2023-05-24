@@ -1,4 +1,5 @@
 #include "shell.h"
+#include <unistd.h>
 
 /**
  * interactive - returns true if shell is interactive mode
@@ -50,12 +51,12 @@ int _atoi(char *s)
 	int y, sign = 1, flag = 0, output;
 	unsigned int result = 0;
 
-	for (y = 0; s[y] != '\0' && flag != 2; i++)
+	for (y = 0; s[y] != '\0' && flag != 2; y++)
 	{
 		if (s[y] == '-')
 			sign *= -1;
 
-		if (s[y] >= '0' && s[i] <= '9')
+		if (s[y] >= '0' && s[y] <= '9')
 		{
 			flag = 1;
 			result *= 10;
