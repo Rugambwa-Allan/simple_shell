@@ -2,71 +2,71 @@
 
 /**
  **_strncpy - copy string
- *@dest: Destination string to be copied to
- *@src: Source string
- *@m: Amount of char to be copied
- *Return: Concatenated string
+ *@dest: destination string to be copied to
+ *@src: source string
+ *@n: amount of characters to be copied
+ *Return: concatenated string
  */
-char *_strncpy(char *dest, char *src, int m)
+char *_strncpy(char *dest, char *src, int n)
 {
-	int n, k;
+	int i, j;
 	char *s = dest;
 
-	n = 0;
-	while (src[n] != '\0' && n < m - 1)
+	i = 0;
+	while (src[i] != '\0' && i < n - 1)
 	{
-		dest[n] = src[n];
-		n++;
+		dest[i] = src[i];
+		i++;
 	}
-	if (n < m)
+	if (i < n)
 	{
-		k = n;
-		while (k < m)
+		j = i;
+		while (j < n)
 		{
-			dest[k] = '\0';
-			k++;
+			dest[j] = '\0';
+			j++;
 		}
 	}
 	return (s);
 }
 
 /**
- **_strncat - Concatenates two strings
- *@dest: First string
- *@src: Second string
- *@m: Amount of bytes to be maximally used
- *Return: Concatenated string
+ **_strncat - concatenates two strings
+ *@dest: first string
+ *@src: second string
+ *@n: amount of bytes to be maximally used
+ *Return: concatenated string
  */
-char *_strncat(char *dest, char *src, int m)
+char *_strncat(char *dest, char *src, int n)
 {
-	int n, k;
+	int i, j;
 	char *s = dest;
 
-	n = 0;
-	k = 0;
-	while (dest[n] != '\0')
-		n++;
-	while (src[k] != '\0' && k < m)
+	i = 0;
+	j = 0;
+	while (dest[i] != '\0')
+		i++;
+	while (src[j] != '\0' && j < n)
 	{
-		dest[n] = src[k];
-		n++;
-		k++;
+		dest[i] = src[j];
+		i++;
+		j++;
 	}
-	if (k < m)
-		dest[n] = '\0';
+	if (j < n)
+		dest[i] = '\0';
 	return (s);
 }
 
 /**
- **_strchr - locate char in a string
- *@s: String to be parsed
- *@b: Char to look for
- *Return: (s) pointer to the memory area s
+ **_strchr - locate character in a string
+ *@s: string to be parsed
+ *@c: character to look for
+ *Return: (s) a pointer to the memory area s
  */
-char *_strchr(char *s, char b)
+char *_strchr(char *s, char c)
 {
 	do {
-		if (*s == b)
+		if (*s == c)
 			return (s);
 	} while (*s++ != '\0');
 

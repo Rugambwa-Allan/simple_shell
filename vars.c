@@ -1,135 +1,136 @@
 #include "shell.h"
+
 /**
- * is_chain - test if current character in buffer is chain delimeter
+ * is_chain - test current char in buffer is a chain delimeter
  * @info: parameter struct
  * @buf: char buffer
- * @t: address of current position in buf
+ * @p: Address of current position in buf
  *
  * Return: 1 if chain delimeter, 0 otherwise
  */
-int is_chain(info_t *info, char *buf, size_t *t)
+int is_chain(info_t *info, char *buf, size_t *p)
 {
-	size_t m = *t;
+	size_t j = *p;
 
-	if (buf[m] == '|' && buf[m + 1] == '|')
+	if (buf[j] == '|' && buf[j + 1] == '|')
 	{
-		buf[m] = 0;
-		m++;
+		buf[j] = 0;
+		j++;
 		info->cmd_buf_type = CMD_OR;
 	}
-	else if (buf[m] == '&' && buf[m + 1] == '&')
+	else if (buf[j] == '&' && buf[j + 1] == '&')
 	{
-		buf[m] = 0;
-		m++;
+		buf[j] = 0;
+		j++;
 		info->cmd_buf_type = CMD_AND;
 	}
-	else if (buf[m] == ';') /* found end of command */
+	else if (buf[j] == ';') /* found end of this command */
 	{
-		buf[m] = 0; /* replace semicolon with null */
+		buf[j] = 0; /* replace semicolon with null */
 		info->cmd_buf_type = CMD_CHAIN;
 	}
 	else
 		return (0);
-	*t = m;
+	*p = j;
 	return (1);
 }
 
 /**
  * check_chain - check we should continue chaining based on last status
  * @info: parameter struct
- * @buf: char buffer
- * @m: address of current position in buf
- * @o: starting position in buf
- * @top: length of buf
+ * @buf: character buffer
+ * @p: Address  current position in buf
+ * @i: starting position in buf
+ * @len: length of buf
  *
  * Return: Void
  */
-void check_chain(info_t *info, char *buf, size_t *m, size_t o, size_t top)
+void check_chain(info_t *info, char *buf, size_t *p, size_t i, size_t len)
 {
-	size_t j = *m;
+	size_t j = *p;
 
 	if (info->cmd_buf_type == CMD_AND)
 	{
 		if (info->status)
 		{
-			buf[o] = 0;
-			j = top;
+			buf[i] = 0;
+			j = len;
 		}
 	}
 	if (info->cmd_buf_type == CMD_OR)
 	{
 		if (!info->status)
 		{
-			buf[o] = 0;
-			j = top;
+			buf[i] = 0;
+			j = len;
 		}
 	}
 
-	*m = j;
+	*p = j;
 }
 
 /**
- * replace_alias - replace aliases in tokenized string
+ * replace_alias - replace an aliases in the tokenized string
  * @info: parameter struct
  *
  * Return: 1 if replaced, 0 otherwise
  */
 int replace_alias(info_t *info)
 {
-	int j;
+	int i;
 	list_t *node;
-	char *m;
+	char *p;
 
-	for (j = 0; j < 10; j++)
+	for (i = 0; i < 10; i++)
 	{
 		node = node_starts_with(info->alias, info->argv[0], '=');
 		if (!node)
 			return (0);
 		free(info->argv[0]);
-		m = _strchr(node->str, '=');
-		if (!m)
+		p = _strchr(node->str, '=');
+		if (!p)
 			return (0);
 		p = _strdup(p + 1);
-		if (!m)
+		if (!p)
 			return (0);
-		info->argv[0] = m;
+		info->argv[0] = p;
 	}
 	return (1);
 }
 
 /**
  * replace_vars - replace vars in tokenized string
- * @info: parameter struct
+ * @info: the parameter struct
  *
  * Return: 1 if replaced, 0 otherwise
  */
 int replace_vars(info_t *info)
 {
-	int j = 0;
+	int i = 0;
 	list_t *node;
 
-	for (j = 0; info->argv[j]; j++)
+	for (i = 0; info->argv[i]; i++)
 	{
-		if (info->argv[j][0] != '$' || !info->argv[j][1])
+		if (info->argv[i][0] != '$' || !info->argv[i][1])
 			continue;
 
-		if (!_strcmp(info->argv[j], "$?"))
+		if (!_strcmp(info->argv[i], "$?"))
 		{
-			replace_string(&(info->argv[j]),
-					_strdup(convert_number(info->status, 10, 0)));
+			replace_string(&(info->argv[i]),
+				_strdup(convert_number(info->status, 10, 0)));
 			continue;
 		}
-		if (!_strcmp(info->argv[j], "$$"))
+		if (!_strcmp(info->argv[i], "$$"))
 		{
-			replace_string(&(info->argv[j]),
-					_strdup(convert_number(getpid(), 10, 0)));
+			replace_string(&(info->argv[i]),
+				_strdup(convert_number(getpid(), 10, 0)));
 			continue;
 		}
-		node = node_starts_with(info->env, &info->argv[j][1], '=');
+		node = node_starts_with(info->env, &info->argv[i][1], '=');
 		if (node)
 		{
-			replace_string(&(info->argv[j]),
-					_strdup(_strchr(node->str, '=') + 1));
+			replace_string(&(info->argv[i]),
+				_strdup(_strchr(node->str, '=') + 1));
 			continue;
 		}
 		replace_string(&info->argv[i], _strdup(""));
@@ -140,8 +141,8 @@ int replace_vars(info_t *info)
 
 /**
  * replace_string - replace string
- * @old: address of old string
- * @new: new string
+ * @old: Address of old string
+ * @new: New string
  *
  * Return: 1 if replaced, 0 otherwise
  */

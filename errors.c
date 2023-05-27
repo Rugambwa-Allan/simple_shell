@@ -1,85 +1,85 @@
 #include "shell.h"
 
 /**
- * _eputs - print an input string
- * @str: String to be printed
+ *_eputs - print an input string
+ * @str: string to be printed
  *
  * Return: Nothing
  */
 void _eputs(char *str)
 {
-	int y = 0;
+	int i = 0;
 
 	if (!str)
 		return;
-	while (str[y] != '\0')
+	while (str[i] != '\0')
 	{
-		_eputchar(str[y]);
-		y++;
+		_eputchar(str[i]);
+		i++;
 	}
 }
 
 /**
  * _eputchar - write the character c to stderr
- * @b: char to print
+ * @c: character to print
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _eputchar(char b)
+int _eputchar(char c)
 {
-	static int y;
+	static int i;
 	static char buf[WRITE_BUF_SIZE];
 
-	if (b == BUF_FLUSH || i >= WRITE_BUF_SIZE)
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
 		write(2, buf, i);
-		y = 0;
+		i = 0;
 	}
-	if (b != BUF_FLUSH)
-		buf[y++] = b;
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
 	return (1);
 }
 
 /**
- * _putrt- write character b to given rt
- * @b: char to print
- * @rt: Filedescriptor to write to
+ * _putfd - writes the character c to given fd
+ * @c: character to print
+ * @fd: filedescriptor to write to
  *
  * Return: On success 1.
  * On error, -1 is returned, and errno is set appropriately.
  */
-int _putrt(char b, int rt)
+int _putfd(char c, int fd)
 {
-	static int y;
+	static int i;
 	static char buf[WRITE_BUF_SIZE];
 
-	if (b == BUF_FLUSH || b >= WRITE_BUF_SIZE)
+	if (c == BUF_FLUSH || i >= WRITE_BUF_SIZE)
 	{
-		write(rt, buf, y);
-		y = 0;
+		write(fd, buf, i);
+		i = 0;
 	}
-	if (b != BUF_FLUSH)
-		buf[y++] = b;
+	if (c != BUF_FLUSH)
+		buf[i++] = c;
 	return (1);
 }
 
 /**
- * _putsrt- print input string
- * @str: String to be printed
- * @rt: filedescriptor to write to
+ *_putsfd - prints an input string
+ * @str: string to be printed
+ * @fd: filedescriptor to write to
  *
- * Return: the number of chars put
+ * Return: number of chars put
  */
-int _putsrt(char *str, int rt)
+int _putsfd(char *str, int fd)
 {
-	int y = 0;
+	int i = 0;
 
 	if (!str)
 		return (0);
 	while (*str)
 	{
-		y += _putrt(*str++, rrt);
+		i += _putfd(*str++, fd);
 	}
-	return (y);
+	return (i);
 }
